@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online CAR Store</title>
+<style>
+  body {
+    background-image: url('neo.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+</style>
+</head>
+<body>
+  <h1 style="font-size: 60px; text-align: center; background-color: rgb(229, 21, 248);">CARS</h1>
+
+  <!-- Div to hold cart items -->
+  <div id="cart-items-section">
+    <h2 style="color:aliceblue":>YOUR ITEMS</h2>
+    <div id="cart-items"></div>
+    <p id="total-item-count" style="color:aliceblue ; font-size: 20px;font-style: oblique;">Cart (0 items)</p>
+  </div>
+
+  <div id="buttons-container" style="text-align: center;"></div>
+
+<script>
+  // JavaScript code for adding items to the cart and rendering them
+
+  // Array of item names and corresponding image URLs
+  var items = [
+    { name: "LAMBORGHINI", image: "lambo.jpeg" },
+    { name: "MUSTANG", image: "must.jpeg" },
+    { name: "ROLLS ROYCE", image: "roll.jpeg" },
+    { name: "G WAGON", image: "g.jpeg"},
+    { name: "PORSCHE", image: "p.jpeg" },
+    { name: "SUPRA", image: "su.jpeg" }
+  ];
+
+  // Function to create and style an element
+  function createElement(tagName, textContent, styles) {
+    var element = document.createElement(tagName);
+    element.textContent = textContent;
+    if (styles) {
+      Object.assign(element.style, styles);
+    }
+    return element;
+  }
+
+  // Function to add items to the cart
+  var cartItems = [];
+
+  function addToCart(item) {
+    cartItems.push(item);
+    renderCart();
+  }
+
+  // Function to remove item from the cart
+  function removeFromCart(index) {
+    cartItems.splice(index, 1);
+    renderCart();
+  }
+
+  // Function to render cart items
+  function renderCart() {
+    var cartContainer = document.getElementById('cart-items');
+    cartContainer.innerHTML = ''; // Clear previous content
+
+    // Object to store item count
+    var itemCounts = {};
+
+    cartItems.forEach(function(item, index) {
+      // Increment item count
+      itemCounts[item.name] = (itemCounts[item.name] || 0) + 1;
+
+      var cartItem = createElement('div', '', { marginBottom: '20px', borderBottom: '1px solid #ccc', paddingBottom: '5px', display: 'flex', alignItems: 'center' });
+      var itemImage = createElement('img', '');
+      itemImage.src = item.image;
+      itemImage.style.width = '170px';
+      itemImage.style.height = 'auto';
+      cartItem.appendChild(itemImage);
+      var itemName = createElement('span', item.name, { marginLeft: '20px', flexGrow: '1' });
+      cartItem.appendChild(itemName);
+      var deleteButton = createElement('button', 'Delete', { padding: '5px 10px', backgroundColor: '#dc3545', color: '#c3545', border:'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px' });
+      deleteButton.onclick = function() { removeFromCart(index); };
+      cartItem.appendChild(deleteButton);
+
+      // Counter for each item
+      var counter = createElement('span', ' x ' + itemCounts[item.name], { marginRight: '10px' });
+      cartItem.appendChild(counter);
+
+      cartContainer.appendChild(cartItem);
+    });
+
+    // Update total item count
+    var totalItemCount = Object.values(itemCounts).reduce((acc, count) => acc + count, 0);
+    document.getElementById('total-item-count').textContent = 'Cart (' + totalItemCount + ')';
+  }
+
+  // Creating buttons dynamically
+  var buttonsDiv = document.getElementById('buttons-container');
+  items.forEach(function(item) {
+    var itemContainer = createElement('div', '', { display: 'inline-block', margin: '10px' });
+    var itemImage = createElement('img', '');
+    itemImage.src = item.image;
+    itemImage.style.width = '300px';
+    itemImage.style.height = 'auto';
+    itemContainer.appendChild(itemImage);
+    var itemName = createElement('span', item.name, { display: 'block', marginTop: '10px', fontWeight: 'bold' }); // Set font weight to bold
+    itemContainer.appendChild(itemName);
+    var addToCartButton = createElement('button', 'Add to Cart', { padding: '8px 16px', backgroundColor:'#800080', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', marginTop: '10px' }); // Add margin-top to separate button from name
+    addToCartButton.onclick = function() { addToCart(item); };
+    itemContainer.appendChild(addToCartButton);
+    buttonsDiv.appendChild(itemContainer);
+
+  });
+  
+  // Initial rendering of cart items
+  renderCart();
+  
+</script>
+
+</body>
+</html>
